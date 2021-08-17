@@ -1,2 +1,2 @@
 # XAI_task
-XAI with cbr to predict machine sales-price
+XAI with Random Forest to predict machine sales-price
