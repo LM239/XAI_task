@@ -6,9 +6,6 @@ from sklearn.tree import DecisionTreeRegressor
 
 
 class MachineRegressor:
-    def __init__(self):
-        self.model = None
-
     def load_model(self, path):
         self.model = pickle.load(open(path, 'rb'))
 

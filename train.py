@@ -7,7 +7,11 @@ from regressor import MachineRegressor
 if __name__ == "__main__":
     modelClass = MachineRegressor()
 
+
+
     data = load_csv()
+    print(data.head().to_dict())
+
     data = clean_data(data)
 
     x = data[best_features]
