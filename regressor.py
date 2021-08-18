@@ -1,3 +1,5 @@
+import pickle
+
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.tree import DecisionTreeRegressor
@@ -8,17 +10,23 @@ class MachineRegressor:
         self.model = None
 
     def load_model(self, path):
-        pass
+        self.model = pickle.load(open(path, 'rb'))
 
-    def save_model(self, path):
-        pass
+    def save_model(self, complete_path):
+        pickle.dump(self.model, open(complete_path, 'wb'))
 
     def train_model(self, x, y):
         self.model = DecisionTreeRegressor(min_samples_split=12, min_samples_leaf=9, max_depth=9, criterion='friedman_mse')
         self.model.fit(x, y)
 
-    def train_grid_search(self, x, y, grid):
-        grid = RandomizedSearchCV(DecisionTreeRegressor(), n_jobs=8, param_distributions=grid, n_iter=100, verbose=True, cv=10)
+    def train_grid_search(self, x, y, grid, options=None):
+        if options is None:
+            options = {"n_jobs": 8,
+                       "param_distributions": grid,
+                       "verbose": True,
+                       "n_iter": 100,
+                       "cv": 10}
+        grid = RandomizedSearchCV(DecisionTreeRegressor(), **options)
         grid.fit(x, y)
         return grid.best_params_
 

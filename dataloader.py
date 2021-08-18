@@ -73,9 +73,14 @@ def clean_data(data: pd.DataFrame):
 
 
 def save_data(df: pd.DataFrame, path, index=False):
+    """
+        Input: dataframe and path to save it to (as .csv) Optional: index to include or not to include the index in the saved file
+        Returns: None
+    """
     df.to_csv(path, index=index)
 
 
+# For testing:
 if __name__ == "__main__":
     from sklearn.tree import DecisionTreeRegressor
 
