@@ -1,2 +1,2 @@
 # XAI_task
-XAI with descicion trees to predict machine sales-price
+XAI with Random Forest to predict machine sales-price
