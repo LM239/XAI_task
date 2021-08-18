@@ -2,8 +2,8 @@ import re
 import numpy as np
 import pandas as pd
 
-from best_features import best_features
-from gdps import gdps
+from data.best_features import best_features
+from data.gdps import gdps
 
 
 def load_csv(file=r"data\TrainAndValid.csv"):
@@ -46,11 +46,14 @@ def clean_data(data: pd.DataFrame):
         Returns: cleaned input dataframe with no nan values (changed to mode, median or 'None or Unspecified'), and new date, agewhensold and stategdp columns
         Input: dataframe with fields given in data/Data_Dictionary.xlsx
     """
+    fallback = {}
     data["yearsold"] = data["saledate"].dt.year
     data["monthsold"] = data["saledate"].dt.month
-    data["ageWhenSold"] = data["saledate"].dt.year - data["YearMade"] #TODO: handle incorrect age (when yearMade is 1000 or saledate is before yearmade")
+    data["ageWhenSold"] = data["saledate"].dt.year - data["YearMade"] # TODO: handle incorrect age (when yearMade is 1000 or saledate is before yearmade")
 
-    data["stateGDP"] = data["state"].apply(lambda x: gdps[x])
+    fallback["ageWhenSold"] = [data["ageWhenSold"].median()]
+    fallback["yearsold"] = [data["yearsold"].median()]
+    #data["stateGDP"] = data["state"].apply(lambda x: gdps[x])
     data = data.drop(["SalesID", "MachineID", "saledate", "fiModelDesc", "fiBaseModel"], axis='columns')
 
     numeric_obj = ["Stick_Length", "Undercarriage_Pad_Width", "Tire_Size"]
@@ -58,6 +61,7 @@ def clean_data(data: pd.DataFrame):
         if obj == "object" and col not in numeric_obj:
             data[col] = data[col].fillna("None or Unspecified") # remove Null values
             data[col] = pd.Categorical(data[col]).codes # change category strings to discrete values
+            fallback[col] = [data[col].mode()[0]]
 
     for col in numeric_obj: # these values are given as categorical but are actually numerical, thus we transform them
         if col == "Stick_Length":
@@ -65,10 +69,14 @@ def clean_data(data: pd.DataFrame):
         else:
             data[col] = data[col].apply(strip_inches).astype(np.float64)
         data[col] = data[col].fillna(data[col].median())
+        fallback[col] = [data[col].median()]
 
     data["MachineHoursCurrentMeter"] = data["MachineHoursCurrentMeter"].fillna(
         data["MachineHoursCurrentMeter"].median())
     data["auctioneerID"] = data["auctioneerID"].fillna(data["auctioneerID"].mode()[0])
+    fallback["MachineHoursCurrentMeter"] = [data["MachineHoursCurrentMeter"].median()]
+    fallback["auctioneerID"] = [data["auctioneerID"].mode()[0]]
+    print(fallback)
     return data
 
 
@@ -85,6 +93,7 @@ if __name__ == "__main__":
     from sklearn.tree import DecisionTreeRegressor
 
     data = load_csv()
+    print(list(data.columns))
     data = clean_data(data)
 
     x = data[best_features]
