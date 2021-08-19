@@ -1,13 +1,11 @@
 from sklearn.model_selection import train_test_split
 
-from best_features import best_features
+from data.data_helpers import best_features
 from dataloader import load_csv, clean_data
-from regressor import MachineRegressor
+from regressor import DTRegressor
 
 if __name__ == "__main__":
-    modelClass = MachineRegressor()
-
-
+    modelClass = DTRegressor()
 
     data = load_csv()
     print(data.head().to_dict())

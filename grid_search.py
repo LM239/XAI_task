@@ -3,10 +3,10 @@ from sklearn.model_selection import train_test_split
 
 from best_features import best_features
 from dataloader import load_csv, clean_data
-from regressor import MachineRegressor
+from regressor import DTRegressor
 
 if __name__ == "__main__":
-    modelClass = MachineRegressor()
+    modelClass = DTRegressor()
 
     data = load_csv()
     data = clean_data(data)
