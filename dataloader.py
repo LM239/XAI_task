@@ -2,7 +2,7 @@ import re
 import numpy as np
 import pandas as pd
 
-from data.data_helpers import cat_mapping, best_features, gdps
+from data.aux_data import cat_mapping, best_features, gdps
 
 
 def load_csv(file=r"data\TrainAndValid.csv"):
@@ -71,7 +71,7 @@ def clean_data(data: pd.DataFrame):
         else:
             data[col] = data[col].apply(strip_inches).astype(np.float64)
         data[col] = data[col].fillna(data[col].median())
-        fallback[col] = [data[col].median()]
+        #fallback[col] = [data[col].median()]
 
     data["MachineHoursCurrentMeter"] = data["MachineHoursCurrentMeter"].fillna(
         data["MachineHoursCurrentMeter"].median())

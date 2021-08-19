@@ -58,7 +58,7 @@ class DTRegressor(Regressor):
         Decision tree regressor class with options for Randomized hyperparameter search
     """
     def train_model(self, x, y):
-        self.model = DecisionTreeRegressor(min_samples_split=12, min_samples_leaf=9, max_depth=9, criterion='friedman_mse')
+        self.model = DecisionTreeRegressor(min_samples_split=3, min_samples_leaf=3, max_depth=9, criterion='friedman_mse')
         self.model.fit(x, y)
 
     def train_grid_search(self, x, y, grid, options=None):
@@ -81,3 +81,4 @@ class DTRegressor(Regressor):
             Returns: feature importances for the decision tree
         """
         return self.model.feature_importances_ if self.model else None
+
