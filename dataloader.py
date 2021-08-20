@@ -18,7 +18,7 @@ def convert_to_inches(val):
         Returns: input length in inches (int)
         Input: string on the form x' y" or float('nan')
     """
-    if val == "None or Unspecified" or val != val:
+    if val == "None or Unspecified" or val != val: # val != val true when val == float('nan')
         return None
     else:
         feet, inches = val.split("' ")
@@ -30,6 +30,7 @@ def strip_inches(val):
         Returns: input length in inches (int)
         Input: string on the form x inch or x"
     """
+    # val == val false when val == float('nan')
     return float(re.sub(r" inch|\"", "", val)) if val not in [None, "None or Unspecified"] and val == val else None
 
 
@@ -41,8 +42,9 @@ def clean_data(data: pd.DataFrame):
     #fallback = {}
     data["yearsold"] = data["saledate"].dt.year
     data["monthsold"] = data["saledate"].dt.month
-    data["ageWhenSold"] = data["saledate"].dt.year - data["YearMade"] # TODO: handle incorrect age (when yearMade is 1000 or saledate is before yearmade")
-
+    
+    # TODO: (initial attempt seem to reuce preciscion!) handle incorrect age (when yearMade is 1000 or saledate is before yearmade")
+    data["ageWhenSold"] = data["saledate"].dt.year - data["YearMade"] 
     #fallback["ageWhenSold"] = [data["ageWhenSold"].median()]
     #fallback["yearsold"] = [data["yearsold"].median()]
     data["stateGDP"] = data["state"].apply(lambda x: gdps[x])
@@ -52,7 +54,7 @@ def clean_data(data: pd.DataFrame):
     for col, obj in zip(data.columns, data.dtypes):
         if obj == "object" and col not in numeric_obj:
             data[col] = data[col].fillna("None or Unspecified")  # remove Null values
-            data[col] = data[col].apply(lambda s: s.strip())  # remove white space (data contains both 'B     ' and 'B')
+            data[col] = data[col].apply(lambda s: s.strip())  # remove white space (e.g. data contains both 'B     ' and 'B')
             data[col] = data[col].apply(lambda s: cat_mapping[col][s] if s in cat_mapping[col] else 0)
 
 
@@ -94,7 +96,7 @@ if __name__ == "__main__":
     x = data[best_features]
     y = data["SalePrice"]
 
-    x.to_csv('data/test_csv.csv', index=False)
+    x.to_csv('data/train_csv.csv', index=False)
 
     model = DecisionTreeRegressor()
     model.fit(x, y)
