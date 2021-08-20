@@ -8,7 +8,6 @@ if __name__ == "__main__":
     modelClass = DTRegressor()
 
     data = load_csv()
-
     data = clean_data(data)
 
     x = data[best_features]
@@ -17,6 +16,7 @@ if __name__ == "__main__":
     X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.1, random_state=42)
 
     modelClass.train_model(X_train, y_train)
+    
     print("RMSE test: ", modelClass.evaluate_model(X_test, y_test, options={"squared": False}))
     print("RMSE train: ", modelClass.evaluate_model(X_train, y_train, options={"squared": False}))
 
