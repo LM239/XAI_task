@@ -10,14 +10,7 @@ def load_csv(file=r"data\TrainAndValid.csv"):
         Returns: dataframe of given csv file
         Input (optional): path to .csv file
     """
-    try:
-        df = pd.read_csv(file, parse_dates=["saledate"], low_memory=False)
-    except FileNotFoundError:
-        # fix anaconda wDir error for jupyter notebook (not present in pycharm)
-        print("Used abs path")
-        df = pd.read_csv(r"C:\Users\larsm\Documents\2NOrconsult\data\TrainAndValid.csv", parse_dates=["saledate"],
-                         low_memory=False)
-    return df
+    return pd.read_csv(file, parse_dates=["saledate"], low_memory=False)
 
 
 def convert_to_inches(val):
