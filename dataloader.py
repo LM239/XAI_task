@@ -48,7 +48,7 @@ def clean_data(data: pd.DataFrame):
     #fallback["ageWhenSold"] = [data["ageWhenSold"].median()]
     #fallback["yearsold"] = [data["yearsold"].median()]
     data["stateGDP"] = data["state"].apply(lambda x: gdps[x])
-    data = data.drop(["SalesID", "MachineID", "saledate", "fiModelDesc", "fiBaseModel"], axis='columns')
+    data = data.drop(["SalesID", "saledate"], axis='columns')
 
     numeric_obj = ["Stick_Length", "Undercarriage_Pad_Width", "Tire_Size"]
     for col, obj in zip(data.columns, data.dtypes):
